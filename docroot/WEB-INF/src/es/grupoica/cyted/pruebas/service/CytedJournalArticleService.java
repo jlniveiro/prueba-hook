@@ -188,7 +188,7 @@ public class CytedJournalArticleService extends JournalArticleServiceWrapper {
 		
 		//Obtenemos la descripción de la Solicitud
 		String descripcion = this.getParseValue("Descripcionn", journalArticle, LocaleUtil.getDefault().toString());
-		System.out.println("DESCRIPCIÓN DEL CONTENIDO: " + descripcion);
+		System.out.println("DESCRIPCIÓN DEL CONTENIDO: " + descripcion); 
 		
 		//Obtenemos las categorias asociadas al Artículo
 		List<AssetCategory> categories = AssetCategoryLocalServiceUtil.getCategories(JournalArticle.class.getName(), journalArticle.getResourcePrimKey());
