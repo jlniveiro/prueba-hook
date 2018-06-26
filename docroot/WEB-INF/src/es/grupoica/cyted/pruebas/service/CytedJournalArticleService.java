@@ -13,6 +13,10 @@ import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.Node;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.service.RoleServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -135,6 +139,29 @@ public class CytedJournalArticleService extends JournalArticleServiceWrapper {
 	}
 	
 	
+	/**
+	 * Obtiene el contenido de un determinado campo del JournalArticle especificado.
+	 * @param fieldname
+	 * @param article
+	 * @param locale
+	 * @return
+	 */
+	private String getParseValue(String fieldname, JournalArticle article, String locale) {
+		String value = "";
+		 try {
+
+		      Document document = SAXReaderUtil.read(article.getContentByLocale(locale));
+		      Node node = document.selectSingleNode("/root/dynamic-element[@name='" + fieldname +"']/dynamic-content");
+		       value = node.getText(); 
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
+		return value; 
+
+	}
+	
+	
 	
 	
 
@@ -159,6 +186,9 @@ public class CytedJournalArticleService extends JournalArticleServiceWrapper {
 				reviewDateMinute, neverReview, indexable, smallImage, smallImageURL, smallFile, images, articleURL,
 				serviceContext);
 		
+		//Obtenemos la descripción de la Solicitud
+		String descripcion = this.getParseValue("Descripcionn", journalArticle, LocaleUtil.getDefault().toString());
+		System.out.println("DESCRIPCIÓN DEL CONTENIDO: " + descripcion);
 		
 		//Obtenemos las categorias asociadas al Artículo
 		List<AssetCategory> categories = AssetCategoryLocalServiceUtil.getCategories(JournalArticle.class.getName(), journalArticle.getResourcePrimKey());
